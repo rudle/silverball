@@ -26,7 +26,7 @@
     "Home run"
     "Missing play"))
 
-(def path "/Users/ssorrell/Google Drive/silverballs/2013_events/")
+(def path "2013_eventdata/")
 
 (defn id [_type possible_types]
   (.indexOf  possible_types _type))
