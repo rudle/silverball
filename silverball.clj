@@ -72,26 +72,24 @@ headers
   (map #(nth l %)
        indicies))
 
-(defn game [g db]
-  (compact (filter #(= (nth % (id "game id" headers)) g)
+(defn db-by [k v db]
+  (compact (filter #(= (nth % (id k headers))
+                       v)
                    db)))
 
-headers
-
-(def game_id "MIN201304010")
+(defn game [g db]
+  (db-by "game id" g db))
 
 (defn player [p_id db]
-            (filter #(= (nth % 9)
-                        p_id)
-                 (compact (map #(identity %) db))))
-
-
-
-headers
-
-(strikeouts (player "cabrm001" (game "MIN201304010" db)))
+  (db-by "res batter" p_id db))
 
 (defn strikeouts [db]
   (count (filter #(include k %)
-          (map #(nth % (id "event type" headers))
-               db))))
+                 (map #(nth % (id "event type" headers))
+                      db))))
+
+
+
+(= (strikeouts (player "cabrm001" (game "MIN201304010" db)))
+   2)
+
