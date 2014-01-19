@@ -61,8 +61,8 @@ headers
         '("Strikeout")))
 
 (defn include [l needle]
-  (some #(= needle %)
-        l))
+  (boolean (some #(= needle %)
+        l)))
 
 (defn compact [l]
   (filter #(identity %) l))
@@ -84,9 +84,19 @@ headers
   (db-by "res batter" p_id db))
 
 (defn strikeouts [db]
-  (count (filter #(include k %)
+  (count-by k db))
+
+(defn caught_stealing [db]
+  (count-by (list (id "Caught stealing" possible_event_types))
+            db))
+
+
+(defn count-by [event_type_keys db]
+  (count (filter #(include event_type_keys %)
                  (map #(nth % (id "event type" headers))
                       db))))
+
+(caught_stealing (game "MIN201304010" db))
 
 
 
