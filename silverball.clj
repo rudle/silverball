@@ -132,7 +132,9 @@
   (map #(who-stole-a-base %)
        (rows-filtered-by (event-type "Stolen base") db)))
 
-
+(defn walks [db]
+  (count-by(event-type "Walk")
+           db))
 ;integration testing, do you do it?
 
 (= (strikeouts (hitter "cabrm001" (game "MIN201304010" db)))
@@ -141,6 +143,10 @@
 (=
  (caught_stealing (game "ARI201304010" db))
  '("parrg001"))
+
+(=
+ (walks (game "ARI201304010" db))
+ 1)
 
 (rows-filtered-by (event-type "Stolen base")
                   db)
