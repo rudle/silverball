@@ -1,3 +1,7 @@
+(def root_dir (->  *file* clojure.java.io/file .getParent))
+
+(def path (str root_dir "/2013_eventdata/"))
+
 (def possible_event_types
   '(
     "Unknown event"
@@ -25,8 +29,6 @@
     "Triple"
     "Home run"
     "Missing play"))
-
-(def path "2013_eventdata/")
 
 (defn id [_type possible_types]
   (.indexOf  possible_types _type))
