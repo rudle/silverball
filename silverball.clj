@@ -135,6 +135,21 @@
 (defn walks [db]
   (count-by(event-type "Walk")
            db))
+
+;returns a tuple of (starting position, ending position)
+(defn event_text_to_batter_advancements [event_text]
+  (map #(clojure.string/split % #"-")
+   (clojure.string/split (subs event_text
+      (+ (.indexOf test_event ".") 1))
+       #";")))
+
+;unit test BRA
+(def test_event "S8/G.2-H;1-3")
+test_event
+
+(= (event_text_to_batter_advancements test_event)
+   `(["2" "H"] ["1" "3"]))
+
 ;integration testing, do you do it?
 
 (= (strikeouts (hitter "cabrm001" (game "MIN201304010" db)))
