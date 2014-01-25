@@ -142,8 +142,6 @@
  (caught_stealing (game "ARI201304010" db))
  '("parrg001"))
 
-(rows-filtered-by (event-type "Stolen base")
-                  db)
 
 (=
  (stolen_base
