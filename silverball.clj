@@ -133,26 +133,30 @@
        (rows-filtered-by (event-type "Stolen base") db)))
 
 (defn walks [db]
-  (count-by(event-type "Walk")
+  (count-by (event-type "Walk")
            db))
 
-;returns a tuple of (starting position, ending position)
-(defn event_text_to_batter_advancements [event_text]
-  (map #(clojure.string/split % #"-")
-   (clojure.string/split (subs event_text
-      (+ (.indexOf test_event ".") 1))
-       #";")))
+(walks (game "MIN201304010" db))
 
+
+;returns a list of batter movements in implicit tuples
+(defn base_runner_positions [event_text]
+  (flatten (map
+            #(clojure.string/split % #"[;|-]")
+            (drop 1
+                  (re-find (re-pattern #"\.(.*)$")
+                           test_event)))))
 ;unit test BRA
 (def test_event "S8/G.2-H;1-3")
-test_event
 
-(= (event_text_to_batter_advancements test_event)
-   `(["2" "H"] ["1" "3"]))
+
+(=  (base_runner_positions test_event)
+   '("2" "H" "1" "3"))
 
 ;integration testing, do you do it?
 
-(= (strikeouts (hitter "cabrm001" (game "MIN201304010" db)))
+(= (strikeouts (hitter "cabrm001"
+                       (game "MIN201304010" db)))
    2)
 
 (=
@@ -167,4 +171,4 @@ test_event
 (=
  (stolen_base
   (game "PIT201304040" db))
- '("mccua001", "mccua001", "rizza001"))
+ '("mccua001", "mccua001", "rizza001")))
