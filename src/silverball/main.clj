@@ -11,9 +11,9 @@
 (def path (str root_dir "/res/2013_eventdata/"))
 
 (def category_map {
-  :1B	false
-  :2B false
-  :3B false
+  :1B	true
+  :2B true
+  :3B true
   :BB false
   :HR false
   :HP false
@@ -182,6 +182,23 @@
 
 (walks (game "MIN201304010" db))
 
+(defn singles [db]
+  (count-by (event-type "Single")
+            db))
+
+(singles (game "MIN201304010" db))
+
+(defn doubles [db]
+  (count-by (event-type "Double")
+            db))
+
+(doubles (game "MIN201304010" db))
+
+(defn triples [db]
+  (count-by (event-type "Triple")
+            db))
+
+(triples (game "MIN201304010" db))
 
 ;;
 (def all_possible_event_texts
