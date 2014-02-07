@@ -1,0 +1,13 @@
+1B	1 pt		     BBI	-.25 pts
+2B	2 pts		     HA	-.25 pts
+3B	3 pts		     HB	-.25 pts
+BB	.75 pts		   ER	-.75 pts
+HR	4 pts		     IP	.9 pts
+HP	.75 pts		   K	.7 pts
+R	1.5 pts		     L	-.75 pts
+RBI	1.5 pts		   S	3 pts
+SB	2 pts		     W	1.5 pts
+KO	-.75 pt		   CG	1 pt
+GDP	-.75 pts		 BS	-.75 pts
+CS	-1 pt
+SAC	.75 pts

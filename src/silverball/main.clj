@@ -1,7 +1,14 @@
-(def root_dir (->  *file* clojure.java.io/file .getParent))
+(use 'clojure.repl)
 
+(ns siverball.main)
 
-(def path (str root_dir "/2013_eventdata/"))
+(print *ns*)
+
+(def root_dir (-> (-> *file* clojure.java.io/file .getParent
+                      clojure.java.io/file .getParent
+                      clojure.java.io/file .getParent)))
+
+(def path (str root_dir "/res/2013_eventdata/"))
 
 (def possible_event_types
   '(
@@ -274,4 +281,4 @@
 (=
  (stolen_base
   (game "PIT201304040" db))
- '("mccua001", "mccua001", "rizza001")))
+ '("mccua001", "mccua001", "rizza001"))
