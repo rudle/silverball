@@ -10,6 +10,38 @@
 
 (def path (str root_dir "/res/2013_eventdata/"))
 
+(def category_map {
+  :1B	false
+  :2B false
+  :3B false
+  :BB false
+  :HR false
+  :HP false
+  :R false
+  :RBI false
+  :SB false
+  :KO false
+  :GDP false
+  :CS false
+  :SAC false
+
+  :BBI false
+  :HA	false
+  :HB false
+  :ER false
+  :IP false
+  :K  false
+  :L false
+  :S false
+  :W false
+  :CG false
+  :BS false
+})
+
+(defn are_we_there_yet [category]
+    (category category_map)
+  )
+
 (def possible_event_types
   '(
     "Unknown event"
@@ -152,8 +184,9 @@
 
 
 ;;
-(map #(nth % (id "event text" headers))
-     db)
+(def all_possible_event_texts
+  (map #(nth % (id "event text" headers))
+       db))
 
 (defn who_was_on [base event]
   (let [event_text (nth event (id "event text" headers))]
