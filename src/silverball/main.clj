@@ -17,13 +17,13 @@
   :BB true
   :HR true
   :HP true
-  :R false
+  :R true
   :RBI false
-  :SB false
-  :KO false
-  :GDP false
-  :CS false
-  :SAC false
+  :SB true
+  :KO true
+  :GDP false ; TODO b@ more columns and data please
+  :CS true
+  :SAC true
 
   :BBI false
   :HA	false
@@ -115,6 +115,20 @@
   (compact (filter #(= (nth % (id k headers))
                        v)
                    db)))
+
+(defn sac [db]
+  (count (filter #(or
+                   (= (nth %
+                   (id "SH flag" headers))
+                   "T")
+                   (= (nth %
+                    (id "SF flag" headers))
+                    "T"))
+  db)))
+
+(sac (take 1000 db))
+
+
 
 (defn game [g db]
   (db-by "game id" g db))
