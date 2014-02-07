@@ -249,8 +249,6 @@
 
 (batter_result "46/L.1-H")
 
-(conj '("b") "a")
-
 (defn who_is_on [base event]
   (let [event_text (nth event (id "event text" headers))
         br_pos (base_runner_positions event_text)
@@ -292,6 +290,15 @@
 (defn scoring_players [event]
   (who_is_on "H" event))
 
+(defn runs [db player_id] ; :(
+  (count
+   (filter #(= (first %) player_id)
+           (map #(scoring_players %)
+                db))))
+
+(runs (game "MIN201304010" db)
+      "jacka001")
+
 (scoring_players _grand_slam_event)
 
 (defn maybe-list [x l]
@@ -315,8 +322,6 @@
 (= '(("H" "1")
      ("2" "H"))
    (base_runner_positions "S7/G.2-H"))
-
-(base_runner_positions "46/2-H")
 
 ;unit test BRA
 (def test_event "S8/G.2-H;H-1;1-3")
@@ -342,4 +347,4 @@
 (=
  (stolen_base
   (game "PIT201304040" db))
- '("mccua001", "mccua001", "rizza001"))
+ '("mccua001" "mccua001" "rizza001"))
