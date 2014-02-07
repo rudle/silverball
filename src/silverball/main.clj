@@ -14,8 +14,8 @@
   :1B	true
   :2B true
   :3B true
-  :BB false
-  :HR false
+  :BB true
+  :HR true
   :HP false
   :R false
   :RBI false
@@ -198,7 +198,13 @@
   (count-by (event-type "Triple")
             db))
 
-(triples (game "MIN201304010" db))
+(triples (game "NYA201304010" db))
+
+(defn home_runs [db]
+  (count-by (event-type "Home run")
+            db))
+
+(home_runs (game "NYA201304030" db))
 
 ;;
 (def all_possible_event_texts
