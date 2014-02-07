@@ -18,7 +18,7 @@
   :HR true
   :HP true
   :R true
-  :RBI false
+  :RBI true
   :SB true
   :KO true
   :GDP false ; TODO b@ more columns and data please
@@ -225,6 +225,13 @@
             db))
 
 (hit_by_pitches (game "NYA201304030" db))
+
+(defn rbi [db]
+  (reduce + (map #(read-string (nth % (id "RBI on play" headers)))
+       db)
+   ))
+
+(rbi (game "NYA201304010" db))
 ;;
 (def all_possible_event_texts
   (map #(nth % (id "event text" headers))
@@ -277,8 +284,6 @@
 (who_is_on "3" _event)
 
 (nth _event (id "first runner" headers))
-
-()
 
 (def _grand_slam_event
   ["ARI201304280" "COL" "2" "1" "1" "2" "2" "0" "0" "chave001" "L" "garlj001" "R" "montm001" "cabrm001" "rizza001" "HR/L.1-H;2-H;3-H" "F" "F" "5" "6" "20" "T" "T" "1" "F" "F" "0" "0" "F" "F" "0" "1" "3" "0" "0"]
