@@ -1,6 +1,14 @@
-(def root_dir (->  *file* clojure.java.io/file .getParent))
+(use 'clojure.repl)
 
-(def path (str root_dir "/2013_eventdata/"))
+(ns siverball.main)
+
+(print *ns*)
+
+(def root_dir (-> (-> *file* clojure.java.io/file .getParent
+                      clojure.java.io/file .getParent
+                      clojure.java.io/file .getParent)))
+
+(def path (str root_dir "/res/2013_eventdata/"))
 
 (def possible_event_types
   '(
@@ -59,8 +67,12 @@
   (boolean
    (some #(= needle %) l)))
 
+;ruby envy. please to stdlib
 (defn compact [l]
   (filter #(identity %) l))
+
+(defn detect [pred l]
+  (first (filter pred l)))
 
 ;(nths '(1 3 4) '(1 2 3 4 5))
 (defn nths [indicies l]
@@ -134,24 +146,122 @@
 
 (defn walks [db]
   (count-by (event-type "Walk")
-           db))
+            db))
 
 (walks (game "MIN201304010" db))
 
 
-;returns a list of batter movements in implicit tuples
-(defn base_runner_positions [event_text]
-  (flatten (map
-            #(clojure.string/split % #"[;|-]")
-            (drop 1
-                  (re-find (re-pattern #"\.(.*)$")
-                           test_event)))))
-;unit test BRA
-(def test_event "S8/G.2-H;1-3")
+;;
+(map #(nth % (id "event text" headers))
+     db)
 
+(defn who_was_on [base event]
+  (let [event_text (nth event (id "event text" headers))]
+    (case base
+      "1" (nth event (id "first runner" headers))
+      "2" (nth event (id "second runner" headers))
+      "3" (nth event (id "third runner" headers))
+      "H" (nth event (id "res batter" headers)))))
+
+(defn batter_result [event_text]
+  (let [hit_type (last (re-find #"([A-Z]*).*/" event_text))]
+    (case hit_type
+      "HR" "H"
+      "S" "1"
+      "W" "1"
+      "D" "2"
+      "T" "3"
+      nil
+      )
+
+
+    ))
+
+(batter_result "HR/L.1-H;2-H")
+
+(re-find #"([A-Z]*).*/"
+         "D9/L")
+
+(= "2"
+   (batter_result
+    "D9/L"))
+
+(batter_result "46/L.1-H")
+
+(conj '("b") "a")
+
+(defn who_is_on [base event]
+  (let [event_text (nth event (id "event text" headers))
+        br_pos (base_runner_positions event_text)
+        from_bases (map first (filter #(= (last %)
+                                          base)
+                                      br_pos))
+        batter_result (batter_result event_text)]
+    (map #(who_was_on %
+                      event)
+         from_bases)))
+
+(who_is_on "3" _event)
+
+(nth _event (id "first runner" headers))
+
+()
+
+(def _grand_slam_event
+  ["ARI201304280" "COL" "2" "1" "1" "2" "2" "0" "0" "chave001" "L" "garlj001" "R" "montm001" "cabrm001" "rizza001" "HR/L.1-H;2-H;3-H" "F" "F" "5" "6" "20" "T" "T" "1" "F" "F" "0" "0" "F" "F" "0" "1" "3" "0" "0"]
+
+  )
+
+(def _event
+  ["ARI201304280" "COL" "2" "1" "1" "2" "2" "0" "0" "chave001" "L" "garlj001" "R" "montm001" "" "" "S9/L.1-3" "F" "F" "5" "6" "20" "T" "T" "1" "F" "F" "0" "0" "F" "F" "0" "1" "3" "0" "0"]
+  )
+
+
+(clojure.test/is (=
+                  (who_is_on "3"
+                             _event)
+                  '("montm001")))
+
+; todo write testing macro to place units near to funcs but print hole file green/red
+(clojure.test/is (=
+                  (who_was_on "1"
+                              _event)
+                  "montm001"))
+
+(defn scoring_players [event]
+  (who_is_on "H" event))
+
+(scoring_players _grand_slam_event)
+
+(defn maybe-list [x l]
+  (if (nil? l) nil
+    (list x l)))
+
+(defn maybe-cons [x l]
+  (if (nil? x) l
+    (cons x l)))
+
+
+;returns a seq of batter movements in tuples (including batters. batter outcomes are not included for those batters who do not reach base)
+; this method is soup, but it wraps up batter movement adequetly
+(defn base_runner_positions [event_text]
+  (let [base_runners (compact (map #(clojure.string/split (last %) #"-")
+                                   (re-seq #"([1|2|3|H]-[1|2|3|H])"
+                                           event_text)))
+        batter (maybe-list "H" (batter_result event_text))]
+    (compact (maybe-cons batter base_runners))))
+
+(= '(("H" "1")
+     ("2" "H"))
+   (base_runner_positions "S7/G.2-H"))
+
+(base_runner_positions "46/2-H")
+
+;unit test BRA
+(def test_event "S8/G.2-H;H-1;1-3")
 
 (=  (base_runner_positions test_event)
-   '("2" "H" "1" "3"))
+    '(["2" "H"] ["H" "1"] ["1" "3"]))
 
 ;integration testing, do you do it?
 
@@ -171,4 +281,4 @@
 (=
  (stolen_base
   (game "PIT201304040" db))
- '("mccua001", "mccua001", "rizza001")))
+ '("mccua001", "mccua001", "rizza001"))
