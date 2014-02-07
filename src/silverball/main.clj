@@ -16,7 +16,7 @@
   :3B true
   :BB true
   :HR true
-  :HP false
+  :HP true
   :R false
   :RBI false
   :SB false
@@ -206,6 +206,11 @@
 
 (home_runs (game "NYA201304030" db))
 
+(defn hit_by_pitches [db]
+  (count-by (event-type "Hit by pitch")
+            db))
+
+(hit_by_pitches (game "NYA201304030" db))
 ;;
 (def all_possible_event_texts
   (map #(nth % (id "event text" headers))
